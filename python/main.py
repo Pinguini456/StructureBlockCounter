@@ -17,7 +17,7 @@ def create_list(struct):
     return block_count
 
 def main():
-    with open("test_files/house.mcstructure", "rb") as f:
+    with open("./test_files/house.mcstructure", "rb") as f:
         struct = Structure.load(f)
 
     print(create_list(struct.get_structure()))
