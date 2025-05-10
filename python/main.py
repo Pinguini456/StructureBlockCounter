@@ -1,40 +1,46 @@
 from mcstructure import Structure
-for i in range(10):
-    print(i)
-def create_list(struct):
-    block_count = {}
+# for i in range(10):
+#     print(i)
+# def create_list(struct):
+#     block_count = {}
 
-    for x in range(len(struct)):
-        for y in range(len(struct[x])):
-            for z in range(len(struct[x][y])):
-                if struct[x][y][z].namespace_and_name[1] == 'air':
-                    continue
+#     for x in range(len(struct)):
+#         for y in range(len(struct[x])):
+#             for z in range(len(struct[x][y])):
+#                 if struct[x][y][z].namespace_and_name[1] == 'air':
+#                     continue
                 
-                print(struct[x][y][z].namespace_and_name[1])
-                if struct[x][y][z].namespace_and_name[1] in block_count:
-                    block_count[struct[x][y][z].namespace_and_name[1]] += 1
-                else:
-                    block_count[struct[x][y][z].namespace_and_name[1]] = 1
+#                 print(struct[x][y][z].namespace_and_name[1])
+#                 if struct[x][y][z].namespace_and_name[1] in block_count:
+#                     block_count[struct[x][y][z].namespace_and_name[1]] += 1
+#                 else:
+#                     block_count[struct[x][y][z].namespace_and_name[1]] = 1
 
-    return block_count
+#     return block_count
 
-def main():
+# def main():
 
-    print("hello")
+#     print("hello")
 
-    with open("./test_files/house.mcstructure", "rb") as f:
+#     with open("./test_files/house.mcstructure", "rb") as f:
+#         struct = Structure.load(f)
+
+#     print(create_list(struct.get_structure()))
+
+
+
+
+
+
+
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+with open("./test_files/house.mcstructure", "rb") as f:
         struct = Structure.load(f)
 
-    print(create_list(struct.get_structure()))
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-    main()
-
+print(struct)
 
