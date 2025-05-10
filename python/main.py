@@ -9,7 +9,8 @@ def create_list(struct):
             for z in range(len(struct[x][y])):
                 if struct[x][y][z].namespace_and_name[1] == 'air':
                     continue
-
+                
+                print(struct[x][y][z].namespace_and_name[1])
                 if struct[x][y][z].namespace_and_name[1] in block_count:
                     block_count[struct[x][y][z].namespace_and_name[1]] += 1
                 else:
