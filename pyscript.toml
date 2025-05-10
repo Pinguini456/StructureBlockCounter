@@ -1,1 +1,1 @@
-packages = ["mcstructure"]
+packages = ["--index-url https://test.pypi.org/simple/ --no-deps mcstructure-test"]
