@@ -1,1 +1,1 @@
-packages = ["mcstructure-test @ https://test-files.pythonhosted.org/packages/42/9f/3d67a2cb85a2bdb4a00061cdf97f203c79042ed653e2e620a15df904a6a9/mcstructure_test-0.0.1b5-py3-none-any.whl"] 
+packages = ["https://test-files.pythonhosted.org/packages/42/9f/3d67a2cb85a2bdb4a00061cdf97f203c79042ed653e2e620a15df904a6a9/mcstructure_test-0.0.1b5-py3-none-any.whl"] 
