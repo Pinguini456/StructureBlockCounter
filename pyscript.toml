@@ -1,2 +1,1 @@
-[files]
-"mcstructure/__init__.py": "./mcstructure.py"
+packages = ["mcstructure"]

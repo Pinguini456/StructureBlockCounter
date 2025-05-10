@@ -1,4 +1,4 @@
-from mcstructure.py import Structure
+from mcstructure import Structure
 
 def create_list(struct):
     block_count = {}
