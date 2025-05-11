@@ -4,6 +4,11 @@ from tkinter import filedialog
 import os
 import json
 
+try:
+    os.mkdir('SavedBuilds')
+except FileExistsError:
+    print("")
+
 def load_saved_builds():
     saved_name = []
     buildlist = os.scandir("SavedBuilds")
@@ -100,7 +105,6 @@ import_file.place(x=230, y=0)
 file.place(x=(145 - (file.winfo_width() / 2)), y=3)
 start_count.place(x=(145 - (start_count.winfo_width() / 2)), y=80)
 
-print(os.path.abspath(os.getcwd()))
 
 root.mainloop()
 
