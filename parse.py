@@ -1,4 +1,3 @@
-from Tools.scripts.texi2html import increment
 from pynbt import BaseTag, NBTFile, TAG_Compound, TAG_Int, TAG_List, TAG_String
 from typing import Any
 
