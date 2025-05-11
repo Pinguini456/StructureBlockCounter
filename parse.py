@@ -27,6 +27,22 @@ def _into_pyobj(tag: BaseTag) -> Any:
 
     return tag
 
+def beautify(struct: dict):
+    new_struct = {}
+    for key in struct.keys():
+        meta = key.split(":")[1]
+        words = meta.split("_")
+        for i in range(len(words)):
+            words[i] = words[i].capitalize()
+        name = words[0]
+        for j in range(len(words) - 1):
+            name = name + " " + words[j + 1]
+
+        new_struct[name] = struct[key]
+
+    return {k: v for k, v in reversed(sorted(new_struct.items(), key=lambda item: item[1]))}
+
+
 
 
 def load(f):
@@ -55,14 +71,17 @@ def total(indices, palette, data):
         inc = 1
 
         if str(count) in data:
-            # try:
-            #     temp = blocks[palette[i][0]]["data"]
-            #     blocks[palette[i][0] + str(count)] = {"amount": 1}
-            #     blocks[palette[i][0] + str(count)]["data"] = data[str(count)]
-            # except KeyError:
-            #     blocks[palette[i][0]]["data"] = data[str(count)]
 
             entity = data[str(count)]
+            """
+            TODO:
+                unlit_redstone_torch
+                unpowered_repeater
+                powered_repeater
+                lit_redstone_lamp
+                undyed_shulker_box - item
+                
+            """
             match name:
                 case "minecraft:bed":
                     inc = 0.5
@@ -102,7 +121,7 @@ def total(indices, palette, data):
                 case "minecraft:standing_banner":
                     match entity['block_entity_data']['Base']:
                         case 0:
-                            name ="minecraft_black_banner"
+                            name ="minecraft:black_banner"
                         case 1:
                             name = "minecraft:red_banner"
                         case 2:
@@ -220,11 +239,12 @@ def total(indices, palette, data):
                         else:
                             blocks[item['Name']] = item['Count']
                 case "minecraft:chiseled_bookshelf":
-                    for item in entity['block_entity_data']['Items']:
-                        if item['Name'] in blocks:
-                            blocks[item['Name']] += item['Count']
-                        else:
-                            blocks[item['Name']] = item['Count']
+                    if 'Items' in entity['block_entity_data']:
+                        for item in entity['block_entity_data']['Items']:
+                            if item['Name'] in blocks:
+                                blocks[item['Name']] += item['Count']
+                            else:
+                                blocks[item['Name']] = item['Count']
                 case "minecraft:furnace":
                     for item in entity['block_entity_data']['Items']:
                         if item['Name'] in blocks:
@@ -264,13 +284,11 @@ def total(indices, palette, data):
 
         count += 1
 
-    del blocks['']
+    if '' in blocks:
+        del blocks['']
+    if 'minecraft:air' in blocks:
+        del blocks['minecraft:air']
     for key in blocks.keys():
         blocks[key] = int(blocks[key])
 
-    print(blocks)
-
-
-with open('TestFiles/test22.mcstructure', 'rb') as f:
-    a, b, c = load(f)
-    total(a, b, c)
+    return beautify(blocks)

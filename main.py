@@ -1,7 +1,9 @@
-from mcstructure import Structure
+import parse
 import tkinter as tk
 from tkinter import filedialog
 import os
+import json
+import subprocess
 
 def load_saved_builds():
     saved_name = []
@@ -10,37 +12,6 @@ def load_saved_builds():
         for build in builds:
             saved_name.append(build.path.split("\\")[1].split(".")[0])
     return saved_name
-
-def create_list(struct):
-    block_count = {}
-
-    for x in range(len(struct)):
-        for y in range(len(struct[x])):
-            for z in range(len(struct[x][y])):
-                if struct[x][y][z].namespace_and_name[1] == 'air':
-                    continue
-
-                name = struct[x][y][z].namespace_and_name[1]
-                match name:
-                    case "unlit_redstone_torch":
-                        name = "redstone_torch"
-                    case "unpowered_repeater":
-                        name = "repeater"
-                    case "powered_repeater":
-                        name = "repeater"
-                    case "lit_redstone_lamp":
-                        name = "redstone_lamp"
-                    # case "bed":
-
-
-
-
-                if name in block_count:
-                    block_count[name] += 1
-                else:
-                    block_count[name] = 1
-
-    return block_count
 
 def count(nbt):
 
@@ -51,11 +22,15 @@ def count(nbt):
         root.update()
         return
 
-    with open(nbt, "rb") as f:
-        struct = Structure.load(f)
+    if name_text.get(1.0, tk.END)[:-1] == "":
+        error.config(text="Please enter a name")
+        root.update()
+        error.place(x=(145 - (error.winfo_width() / 2)), y=60)
+        root.update()
+        return
 
-    print(struct.palette)
-    open_from_structure(create_list(struct.get_structure()))
+    with open(nbt, "rb") as f:
+        open_from_structure(f)
 
 def upload_action():
     filename = filedialog.askopenfilename(filetypes=(("Bedrock Structure Files", "*.mcstructure"),))
@@ -72,8 +47,14 @@ def upload_action():
 def open_from_config(path):
     print(path)
 
-def open_from_structure(palette):
-    print(palette)
+def open_from_structure(file):
+    a, b, c = parse.load(file)
+    print(parse.total(a, b, c))
+
+    with open('SavedBuilds/' + name_text.get(1.0, tk.END)[:-1] + ".json", 'w+') as build:
+        build.write(json.dumps(parse.total(a, b, c)))
+
+
 
 builds = load_saved_builds()
 
@@ -99,7 +80,7 @@ menu = tk.Menu(root)
 root.config(menu=menu)
 filemenu = tk.Menu(menu)
 menu.add_cascade(label="File", menu=filemenu)
-filemenu.add_command(label="Open saved builds")
+filemenu.add_command(label="Open saved builds", command=lambda: os.startfile(os.path.abspath(os.getcwd()) + r'\SavedBuilds'))
 filemenu.add_separator()
 filemenu.add_command(label="Exit", command=root.quit)
 load = tk.Menu(menu)
@@ -114,12 +95,13 @@ start_count.place(x=0, y=0)
 error.place(x=0, y=0)
 root.update()
 label.place(x=5, y=0)
-name_label.place(x=37, y=40)
-name_text.place(x=(145 - (file.winfo_width() / 2)), y=43)
+name_label.place(x=37, y=35)
+name_text.place(x=(145 - (file.winfo_width() / 2)), y=38)
 import_file.place(x=230, y=0)
 file.place(x=(145 - (file.winfo_width() / 2)), y=3)
 start_count.place(x=(145 - (start_count.winfo_width() / 2)), y=80)
 
+print(os.path.abspath(os.getcwd()))
 
 root.mainloop()
 
