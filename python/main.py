@@ -1,4 +1,4 @@
-from mcstructure import Structure
+# from structure import Structure
 # for i in range(10):
 #     print(i)
 # def create_list(struct):
