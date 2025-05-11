@@ -39,6 +39,8 @@ def count(nbt):
 def upload_action():
     filename = filedialog.askopenfilename(filetypes=(("Bedrock Structure Files", "*.mcstructure"),))
     global filepath
+    if filename == "":
+        return
     filepath = filename
     filename = filename.split("/")
     file.configure(state=tk.NORMAL)
@@ -49,7 +51,8 @@ def upload_action():
 
 
 def open_from_config(path):
-    print(path)
+    with open(path, 'r') as f:
+        print(json.loads(f.read()))
 
 def open_from_structure(file):
     a, b, c = parse.load(file)
