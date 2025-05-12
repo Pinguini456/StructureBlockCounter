@@ -3,11 +3,32 @@ import tkinter as tk
 from tkinter import filedialog
 import os
 import json
+import customtkinter as ctk
 
 try:
     os.mkdir('SavedBuilds')
 except FileExistsError:
     print("")
+
+
+def open_new_window():
+    root.destroy()
+    app = ctk.CTk()
+    ctk.set_appearance_mode("dark")
+
+
+
+
+
+
+
+
+
+
+    app.mainloop()
+
+
+
 
 def load_saved_builds():
     saved_name = []
@@ -35,6 +56,7 @@ def count(nbt):
 
     with open(nbt, "rb") as f:
         open_from_structure(f)
+        open_new_window()
 
 def upload_action():
     filename = filedialog.askopenfilename(filetypes=(("Bedrock Structure Files", "*.mcstructure"),))
