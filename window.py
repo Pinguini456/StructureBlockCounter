@@ -1,10 +1,12 @@
 import tkinter as tk
 from tkinter import filedialog
-from xml.sax.handler import property_xml_string
-
+from PIL import Image
 import customtkinter as ctk
 import os
 import json
+
+from customtkinter import CTkImage, CTkLabel
+
 import parse
 
 
@@ -123,12 +125,12 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.grid_columnconfigure(0, weight=1)
 
         self.frames = []
-
+        self.frame_data = []
         self.populate(data)
 
 
     def populate(self, data: dict):
-        for i in range(len(data.keys())):
+        for i in range(len(list(data.keys()))):
             frame = ctk.CTkFrame(self, fg_color='#333333', height=50)
             if i == 0 or i == len(data.keys()):
                 pad = 10
@@ -136,6 +138,12 @@ class DataFrame(ctk.CTkScrollableFrame):
                 pad = 5
             frame.grid(row=i, column=0, padx=(10, 5), pady=(pad, 5), sticky='ew')
             self.frames.append(frame)
+
+            image = Image.open("icons/" + list(data.keys())[i].replace(' ', "_").lower() + ".png")
+            icon = ctk.CTkImage(dark_image=image, light_image=image)
+            # label = ctk.CTkLabel(master=self, image=icon, text="")
+            # label.grid(row=0, column=0, padx=2, pady=2, sticky='ns')
+            # self.frame_data.append([label])
 
 
 

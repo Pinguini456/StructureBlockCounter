@@ -80,6 +80,10 @@ def total(indices, palette, data):
                 lit_redstone_lamp
                 undyed_shulker_box - item
                 
+                also:
+                bed - item - damage
+                banner - item - damage
+                
             """
             match name:
                 case "minecraft:bed":
