@@ -1,13 +1,30 @@
 import tkinter as tk
+from tkinter import filedialog
 import customtkinter as ctk
 import os
-import methods as m
+import json
+import parse
+
+
+def load_saved_builds():
+    saved_name = []
+    buildlist = os.scandir("SavedBuilds")
+    with buildlist as builds:
+        for build in builds:
+            saved_name.append(build.path.split("\\")[1].split(".")[0])
+    return saved_name
+
+def open_from_config(path):
+    with open(path, 'r') as f:
+        print(json.loads(f.read()))
 
 class InputWindow(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.builds = m.load_saved_builds()
+        self.builds = load_saved_builds()
+        self.filepath = ""
+        self.filename = ""
 
         self.title("Structure Block Counter")
         self.geometry("250x150")
@@ -18,10 +35,10 @@ class InputWindow(tk.Tk):
         self.file = tk.Listbox(self, height=1, width=20)
         self.file.insert(0, 'No File Selected')
         self.file.configure(state=tk.DISABLED)
-        self.import_file = tk.Button(self, text="Browse", command=lambda: m.upload_action(self))
+        self.import_file = tk.Button(self, text="Browse", command=lambda: self.upload_action())
         self.name_label = tk.Label(self, text="Name")
         self.name_text = tk.Text(self, width=15, height=1)
-        self.start_count = tk.Button(self, text="Count", command=lambda: m.count(self))
+        self.start_count = tk.Button(self, text="Count", command=lambda: self.count())
         self.error = tk.Label(self, text="")
 
         self.menu = tk.Menu(self)
@@ -36,7 +53,7 @@ class InputWindow(tk.Tk):
         self.menu.add_cascade(label="Load saved build", menu=self.load)
         for build_name in self.builds:
             self.load.add_command(label=build_name,
-                             command=lambda b=build_name: m.open_from_config("SavedBuilds/" + b + ".json"))
+                             command=lambda b=build_name: open_from_config("SavedBuilds/" + b + ".json"))
 
         self.file.place(x=0, y=0)
         self.start_count.place(x=0, y=0)
@@ -49,6 +66,60 @@ class InputWindow(tk.Tk):
         self.file.place(x=(145 - (self.file.winfo_width() / 2)), y=3)
         self.start_count.place(x=(145 - (self.start_count.winfo_width() / 2)), y=80)
 
+    def upload_action(self):
+        self.filename = filedialog.askopenfilename(filetypes=(("Bedrock Structure Files", "*.mcstructure"),))
+        if self.filename == "":
+            return
+        self.filepath = self.filename
+        self.filename = self.filename.split("/")
+        self.file.configure(state=tk.NORMAL)
+        self.file.delete(0)
+        self.file.insert(0, self.filename[-1])
+        self.file.configure(state=tk.DISABLED)
+        self.update()
+
+
+    def count(self):
+        if self.filepath == "":
+            self.error.config(text="Please enter a file")
+            self.update()
+            self.error.place(x=(145 - (self.error.winfo_width() / 2)), y=60)
+            self.update()
+            return
+
+        if self.name_text.get(1.0, tk.END)[:-1] == "":
+            self.error.config(text="Please enter a name")
+            self.update()
+            self.error.place(x=(145 - (self.error.winfo_width() / 2)), y=60)
+            self.update()
+            return
+
+        with open(self.filepath, "rb") as f:
+            self.open_from_structure(f)
+            self.open_new_window()
+
+    def open_from_structure(self, file):
+        a, b, c = parse.load(file)
+        print(parse.total(a, b, c))
+
+        with open('SavedBuilds/' + self.name_text.get(1.0, tk.END)[:-1] + ".json", 'w+') as build:
+            build.write(json.dumps(parse.total(a, b, c)))
+
+    def open_new_window(self):
+        self.destroy()
+        app = ListWindow()
+        app.mainloop()
+
+
+class Frame(ctk.CTkFrame):
+    def __init__(self, master, **kwargs):
+        super().__init__(master, **kwargs)
+
+
+
+
+
+
 
 class ListWindow(ctk.CTk):
     def __init__(self):
@@ -56,3 +127,13 @@ class ListWindow(ctk.CTk):
 
         ctk.set_appearance_mode("dark")
         self.geometry("960x540")
+
+
+
+
+
+
+
+
+
+
