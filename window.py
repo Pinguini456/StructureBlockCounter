@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
+from xml.sax.handler import property_xml_string
+
 import customtkinter as ctk
 import os
 import json
@@ -25,6 +27,7 @@ class InputWindow(tk.Tk):
         self.builds = load_saved_builds()
         self.filepath = ""
         self.filename = ""
+        self.data = {}
 
         self.title("Structure Block Counter")
         self.geometry("250x150")
@@ -38,6 +41,7 @@ class InputWindow(tk.Tk):
         self.import_file = tk.Button(self, text="Browse", command=lambda: self.upload_action())
         self.name_label = tk.Label(self, text="Name")
         self.name_text = tk.Text(self, width=15, height=1)
+        self.name_text.config(wrap='none')
         self.start_count = tk.Button(self, text="Count", command=lambda: self.count())
         self.error = tk.Label(self, text="")
 
@@ -101,34 +105,55 @@ class InputWindow(tk.Tk):
     def open_from_structure(self, file):
         a, b, c = parse.load(file)
         print(parse.total(a, b, c))
+        self.data = parse.total(a, b, c)
 
         with open('SavedBuilds/' + self.name_text.get(1.0, tk.END)[:-1] + ".json", 'w+') as build:
             build.write(json.dumps(parse.total(a, b, c)))
 
     def open_new_window(self):
+        app = ListWindow(self.name_text.get(1.0, tk.END)[:-1], self.data)
         self.destroy()
-        app = ListWindow()
         app.mainloop()
 
 
-class Frame(ctk.CTkFrame):
-    def __init__(self, master, **kwargs):
+class DataFrame(ctk.CTkScrollableFrame):
+    def __init__(self, master, data, **kwargs):
         super().__init__(master, **kwargs)
 
+        self.grid_columnconfigure(0, weight=1)
 
+        self.frames = []
+
+        self.populate(data)
+
+
+    def populate(self, data: dict):
+        for i in range(len(data.keys())):
+            frame = ctk.CTkFrame(self, fg_color='#333333', height=50)
+            if i == 0 or i == len(data.keys()):
+                pad = 10
+            else:
+                pad = 5
+            frame.grid(row=i, column=0, padx=(10, 5), pady=(pad, 5), sticky='ew')
+            self.frames.append(frame)
 
 
 
 
 
 class ListWindow(ctk.CTk):
-    def __init__(self):
+    def __init__(self, title, data):
         super().__init__()
 
         ctk.set_appearance_mode("dark")
         self.geometry("960x540")
+        self.title(title + " material list")
 
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
+        self.frame = DataFrame(master=self, data=data)
+        self.frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
 
 
 
