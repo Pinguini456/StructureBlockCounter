@@ -101,6 +101,14 @@ def correct_item_names(data):
             name = "minecraft:shulker_box"
         case "minecraft:normal_stone_stairs":
             name = "minecraft:stone_stairs"
+        case "minecraft:leather_chestplate":
+            name = "minecraft:leather_tunic"
+        case "minecraft:leather_helmet":
+            name = "minecraft:leather_hat"
+        case "minecraft:leather_leggings":
+            name = "minecraft:leather_pants"
+        case "minecraft:writable_book":
+            name = "minecraft:book_and_quill"
         case _:
             name = data["Name"]
 
@@ -154,14 +162,6 @@ def total(indices, palette, data):
         if str(count) in data:
 
             entity = data[str(count)]
-            """
-            TODO:
-                unlit_redstone_torch
-                unpowered_repeater
-                powered_repeater
-                lit_redstone_lamp
-                
-            """
             match name:
                 case "minecraft:bed":
                     inc = 0.5
@@ -390,6 +390,69 @@ def total(indices, palette, data):
                 name = "minecraft:terracotta"
             case "minecraft:fence_gate":
                 name = "minecraft:oak_fence_gate"
+            case "minecraft:trapdoor":
+                name = "minecraft:oak_trapdoor"
+            case "minecraft:end_bricks":
+                name = "minecraft:end_stone_bricks"
+            case "minecraft:nether_brick":
+                name = "minecraft:nether_bricks"
+            case "minecraft:standing_sign":
+                name = "minecraft:oak_sign"
+            case "minecraft:darkoak_standing_sign":
+                name = "minecraft:dark_oak_sign"
+            case str(x) if 'standing_sign' in x:
+                name = name[:-13]
+                name = name + "sign"
+            case "minecraft:wooden_pressure_plate":
+                name = "minecraft:oak_pressure_plate"
+            case "minecraft:unpowered_repeater":
+                name = "minecraft:repeater"
+            case "minecraft:powered_repeater":
+                name = "minecraft:repeater"
+            case "minecraft:unlit_redstone_torch":
+                name = "minecraft:redstone_torch"
+            case "minecraft:lit_redstone_lamp":
+                name = "minecraft:redstone_lamp"
+            case "minecraft:stonecutter_block":
+                name = "minecraft:stonecutter"
+            case "minecraft:unpowered_comparator":
+                name = "minecraft:comparator"
+            case "minecraft:powered_comparator":
+                name = "minecraft:comparator"
+            case "minecraft:target":
+                name = "minecraft:target_block"
+            case "minecraft:wooden_button":
+                name = "minecraft:oak_button"
+            case "minecraft:redstone_wire":
+                name = "minecraft:redstone"
+            case "minecraft:daylight_detector_inverted":
+                name = "minecraft:daylight_detector"
+            case "minecraft:snow_layer":
+                name = "minecraft:snow"
+            case "minecraft:melon_block":
+                name = "minecraft:melon"
+            case "minecraft:grass_path":
+                name = "minecraft:dirt_path"
+            case "minecraft:dirt_with_roots":
+                name = "minecraft:rooted_dirt"
+            case "minecraft:small_dripleaf_block":
+                name = "minecraft:small_dripleaf"
+            case "minecraft:quartz_ore":
+                name = "minecraft:nether_quartz_ore"
+            case "minecraft:azalea_leaves_flowered":
+                name = "minecraft:flowering_azalea_leaves"
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

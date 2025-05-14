@@ -18,10 +18,6 @@ def load_saved_builds():
             saved_name.append(build.path.split("\\")[1].split(".")[0])
     return saved_name
 
-def open_from_config(path):
-    with open(path, 'r') as f:
-        print(json.loads(f.read()))
-
 class InputWindow(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -59,7 +55,7 @@ class InputWindow(tk.Tk):
         self.menu.add_cascade(label="Load saved build", menu=self.load)
         for build_name in self.builds:
             self.load.add_command(label=build_name,
-                             command=lambda b=build_name: open_from_config("SavedBuilds/" + b + ".json"))
+                             command=lambda b=build_name: self.open_from_config("SavedBuilds/" + b + ".json"))
 
         self.file.place(x=0, y=0)
         self.start_count.place(x=0, y=0)
@@ -111,6 +107,12 @@ class InputWindow(tk.Tk):
 
         with open('SavedBuilds/' + self.name_text.get(1.0, tk.END)[:-1] + ".json", 'w+') as build:
             build.write(json.dumps(parse.total(a, b, c)))
+
+    def open_from_config(self, path):
+        with open(path, 'r') as f:
+            self.data = json.loads(f.read())
+            self.open_new_window()
+
 
     def open_new_window(self):
         app = ListWindow(self.name_text.get(1.0, tk.END)[:-1], self.data)
