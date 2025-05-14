@@ -99,6 +99,8 @@ def correct_item_names(data):
                     name = "minecraft:black_bed"
         case "minecraft:undyed_shulker_box":
             name = "minecraft:shulker_box"
+        case "minecraft:normal_stone_stairs":
+            name = "minecraft:stone_stairs"
         case _:
             name = data["Name"]
 
@@ -366,6 +368,30 @@ def total(indices, palette, data):
                             blocks[item_name] += item['Count']
                         else:
                             blocks[item_name] = item['Count']
+
+        match name:
+            case "minecraft:normal_stone_stairs":
+                name = "minecraft:stone_stairs"
+            case "minecraft:waxed_copper":
+                name = "minecraft:waxed_block_of_copper"
+            case "minecraft:end_brick_stairs":
+                name = "minecraft:end_stone_brick_stairs"
+            case "minecraft:brick_block":
+                name = "minecraft:bricks"
+            case "minecraft:hay_block":
+                name = "minecraft:hay_bale"
+            case "minecraft:normal_stone_slab":
+                name = "minecraft:stone_slab"
+            case "minecraft:silver_glazed_terracotta":
+                name = "minecraft:light_gray_glazed_terracotta"
+            case "minecraft:lapis_block":
+                name = "minecraft:block_of_lapis_lazuli"
+            case "minecraft:hardened_clay":
+                name = "minecraft:terracotta"
+            case "minecraft:fence_gate":
+                name = "minecraft:oak_fence_gate"
+
+
 
 
         if name in blocks:
