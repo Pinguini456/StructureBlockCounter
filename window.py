@@ -115,9 +115,9 @@ class InputWindow(tk.Tk):
 
 
     def open_new_window(self):
-        app = ListWindow(self.name_text.get(1.0, tk.END)[:-1], self.data)
-        self.destroy()
-        app.mainloop()
+        app = ListWindow(master=self, title=self.name_text.get(1.0, tk.END)[:-1], data=self.data)
+        self.iconify()
+        # app.mainloop()
 
 
 class DataFrame(ctk.CTkScrollableFrame):
@@ -125,35 +125,51 @@ class DataFrame(ctk.CTkScrollableFrame):
         super().__init__(master, **kwargs)
 
         self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
         self.frames = []
         self.frame_data = []
+        self.icons = []
+        self.image = None
+        self.icon = None
         self.populate(data)
 
-
     def populate(self, data: dict):
-        for i in range(len(list(data.keys()))):
-            frame = ctk.CTkFrame(self, fg_color='#333333', height=50)
-            if i == 0 or i == len(data.keys()):
-                pad = 10
-            else:
-                pad = 5
+        for i, key in enumerate(data.keys()):
+            frame = ctk.CTkFrame(self, fg_color='#333333', height=100)
+            pad = 10 if i == 0 or i == len(data.keys()) else 5
             frame.grid(row=i, column=0, padx=(10, 5), pady=(pad, 5), sticky='ew')
+
+            img_path = f"icons/{key.replace(' ', '_').lower()}.png"
+            print("Loading image:", img_path)
+
+            assert os.path.exists(img_path), f"Image file not found: {img_path}"
+
+            # Make sure image is loaded and reference kept
+            img = Image.open(img_path)
+
+            img = img.convert("RGBA")
+
+            # Only upscale *if* image is smaller than target
+            if img.size[0] < 48 or img.size[1] < 48:
+                img = img.resize((48, 48), Image.Resampling.LANCZOS)
+
+            icon = ctk.CTkImage(light_image=img, dark_image=img, size=(48, 48))
+            self.icons.append(icon)
+
+            label = ctk.CTkLabel(master=frame, image=icon, text="")
+            label.grid(row=0, column=0, padx=2, pady=2, sticky='nsew')
+
+            self.frame_data.append([label])
             self.frames.append(frame)
 
-            image = Image.open("icons/" + list(data.keys())[i].replace(' ', "_").lower() + ".png")
-            icon = ctk.CTkImage(dark_image=image, light_image=image)
-            # label = ctk.CTkLabel(master=self, image=icon, text="")
-            # label.grid(row=0, column=0, padx=2, pady=2, sticky='ns')
-            # self.frame_data.append([label])
 
 
-
-
-
-class ListWindow(ctk.CTk):
-    def __init__(self, title, data):
-        super().__init__()
+class ListWindow(ctk.CTkToplevel):
+    def __init__(self, master, title, data):
+        super().__init__(master=master)
 
         ctk.set_appearance_mode("dark")
         self.geometry("960x540")
@@ -164,6 +180,7 @@ class ListWindow(ctk.CTk):
 
         self.frame = DataFrame(master=self, data=data)
         self.frame.grid(row=0, column=0, padx=20, pady=20, sticky="nsew")
+
 
 
 
