@@ -1,12 +1,11 @@
+import math
 import tkinter as tk
+import customtkinter as ctk
 from tkinter import filedialog
 from PIL import Image
-import customtkinter as ctk
+from tkextrafont import Font
 import os
 import json
-
-from customtkinter import CTkImage, CTkLabel
-
 import parse
 
 
@@ -125,44 +124,50 @@ class DataFrame(ctk.CTkScrollableFrame):
         super().__init__(master, **kwargs)
 
         self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
-        self.grid_columnconfigure(0, weight=1)
 
         self.frames = []
         self.frame_data = []
         self.icons = []
         self.image = None
         self.icon = None
+        self.font_file = Font(file="fonts/minecraft_font.ttf", family="Minecraft")
+        self.font = ctk.CTkFont('Minecraft')
+
         self.populate(data)
 
     def populate(self, data: dict):
         for i, key in enumerate(data.keys()):
-            frame = ctk.CTkFrame(self, fg_color='#333333', height=100)
+            frame = ctk.CTkFrame(self, fg_color='#333333', height=50)
             pad = 10 if i == 0 or i == len(data.keys()) else 5
+
+            frame.grid_columnconfigure(index=0, weight=0)
+            frame.grid_columnconfigure(index=1, weight=1, uniform="equal_width")
+            frame.grid_columnconfigure(index=2, weight=1, uniform="equal_width")
+            frame.grid_columnconfigure(index=3, weight=1, uniform="equal_width")
+
             frame.grid(row=i, column=0, padx=(10, 5), pady=(pad, 5), sticky='ew')
 
-            img_path = f"icons/{key.replace(' ', '_').lower()}.png"
+            img_path = f"icons/WIP/{key.replace(' ', '_').lower()}.png"
             print("Loading image:", img_path)
 
             assert os.path.exists(img_path), f"Image file not found: {img_path}"
-
-            # Make sure image is loaded and reference kept
             img = Image.open(img_path)
-
             img = img.convert("RGBA")
+            icon = ctk.CTkImage(light_image=img, dark_image=img, size=(32, 32))
 
-            # Only upscale *if* image is smaller than target
-            if img.size[0] < 48 or img.size[1] < 48:
-                img = img.resize((48, 48), Image.Resampling.LANCZOS)
+            img_border = ctk.CTkFrame(master=frame, border_width=2, border_color="red", fg_color="transparent")
+            image = ctk.CTkLabel(master=img_border, image=icon, text="", width=200).pack()
+            img_border.grid(row=0, column=0, sticky='ns')
 
-            icon = ctk.CTkImage(light_image=img, dark_image=img, size=(48, 48))
-            self.icons.append(icon)
+            name = ctk.CTkLabel(master=frame, text=key, font=self.font, anchor="w")
+            name.grid(row=0, column=1, sticky="nsw")
 
-            label = ctk.CTkLabel(master=frame, image=icon, text="")
-            label.grid(row=0, column=0, padx=2, pady=2, sticky='nsew')
+            count = ctk.CTkLabel(master=frame, text=str(math.floor(data[key] / 64)) + " + " + str(data[key] % 64), font=self.font)
+            count.grid(row=0, column=2, sticky='nsew')
 
-            self.frame_data.append([label])
+            shulker = ctk.CTkLabel(master=frame, text)
+
+            self.frame_data.append([image, name, count, ])
             self.frames.append(frame)
 
 

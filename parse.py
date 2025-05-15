@@ -2,6 +2,11 @@ from pynbt import BaseTag, NBTFile, TAG_Compound, TAG_Int, TAG_List, TAG_String
 from typing import Any
 
 
+def is_unstackable(name):
+
+
+
+
 # Turns an NBT tree into a python tree.
 def _into_pyobj(tag: BaseTag) -> Any:
 
