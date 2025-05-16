@@ -1,10 +1,15 @@
 from pynbt import BaseTag, NBTFile, TAG_Compound, TAG_Int, TAG_List, TAG_String
 from typing import Any
+from constant import *
 
 
 def is_unstackable(name):
-
-
+    if name in UNSTACKABLES:
+        return 1
+    elif name in QUARTER_STACKABLES:
+        return 2
+    else:
+        return 0
 
 
 # Turns an NBT tree into a python tree.

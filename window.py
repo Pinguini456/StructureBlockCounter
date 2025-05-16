@@ -110,13 +110,14 @@ class InputWindow(tk.Tk):
     def open_from_config(self, path):
         with open(path, 'r') as f:
             self.data = json.loads(f.read())
+            name = path.split("/")[-1].split(".")[0]
+            self.name_text.insert("1.0", name)
             self.open_new_window()
 
 
     def open_new_window(self):
-        app = ListWindow(master=self, title=self.name_text.get(1.0, tk.END)[:-1], data=self.data)
+        ListWindow(master=self, title=self.name_text.get(1.0, tk.END)[:-1], data=self.data)
         self.iconify()
-        # app.mainloop()
 
 
 class DataFrame(ctk.CTkScrollableFrame):
@@ -132,43 +133,94 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.icon = None
         self.font_file = Font(file="fonts/minecraft_font.ttf", family="Minecraft")
         self.font = ctk.CTkFont('Minecraft')
+        self.bold_font = ctk.CTkFont('Minecraft', 14, "bold")
 
         self.populate(data)
 
     def populate(self, data: dict):
+
+        title_frame = ctk.CTkFrame(self, fg_color='#333333', height=50)
+
+        title_frame.grid_columnconfigure(index=0, weight=0)
+        title_frame.grid_columnconfigure(index=1, weight=1, uniform="equal_width")
+        title_frame.grid_columnconfigure(index=2, weight=1, uniform="equal_width")
+        title_frame.grid_columnconfigure(index=3, weight=1, uniform="equal_width")
+
+        title_frame.grid(row=0, column=0, padx=(10, 5), pady=(10, 5), sticky='ew')
+
+        icon_title = ctk.CTkLabel(master=title_frame, text="", width=200)
+        name_title = ctk.CTkLabel(master=title_frame, text="Name", font=self.bold_font)
+        amount_title = ctk.CTkLabel(master=title_frame, text="Stacks", font=self.bold_font)
+        shulker_img = Image.open('icons/WIP/shulker_box.png')
+        shulker_icon = ctk.CTkImage(light_image=shulker_img, dark_image=shulker_img, size=(32, 32))
+        shulker_image = ctk.CTkLabel(master=title_frame, image=shulker_icon, text="")
+
+        icon_title.grid(row=0, column=0, sticky='ns')
+        name_title.grid(row=0, column=1, sticky='nsw')
+        amount_title.grid(row=0, column=2, sticky='nsew')
+        shulker_image.grid(row=0, column=3, sticky='nsew')
+
         for i, key in enumerate(data.keys()):
-            frame = ctk.CTkFrame(self, fg_color='#333333', height=50)
-            pad = 10 if i == 0 or i == len(data.keys()) else 5
-
-            frame.grid_columnconfigure(index=0, weight=0)
-            frame.grid_columnconfigure(index=1, weight=1, uniform="equal_width")
-            frame.grid_columnconfigure(index=2, weight=1, uniform="equal_width")
-            frame.grid_columnconfigure(index=3, weight=1, uniform="equal_width")
-
-            frame.grid(row=i, column=0, padx=(10, 5), pady=(pad, 5), sticky='ew')
-
             img_path = f"icons/WIP/{key.replace(' ', '_').lower()}.png"
-            print("Loading image:", img_path)
 
-            assert os.path.exists(img_path), f"Image file not found: {img_path}"
-            img = Image.open(img_path)
-            img = img.convert("RGBA")
-            icon = ctk.CTkImage(light_image=img, dark_image=img, size=(32, 32))
+            frame = ListItemFrame(self, img_path, key, data[key], self.font, True, fg_color='#333333', height=50)
 
-            img_border = ctk.CTkFrame(master=frame, border_width=2, border_color="red", fg_color="transparent")
-            image = ctk.CTkLabel(master=img_border, image=icon, text="", width=200).pack()
-            img_border.grid(row=0, column=0, sticky='ns')
+            pad = 10 if i == len(data.keys()) else 5
+            frame.grid(row=i + 1, column=0, padx=(10, 5), pady=(pad, 5), sticky='ew')
 
-            name = ctk.CTkLabel(master=frame, text=key, font=self.font, anchor="w")
-            name.grid(row=0, column=1, sticky="nsw")
+            frame.bind("<Button-1>", lambda: frame.change_state())
 
-            count = ctk.CTkLabel(master=frame, text=str(math.floor(data[key] / 64)) + " + " + str(data[key] % 64), font=self.font)
-            count.grid(row=0, column=2, sticky='nsew')
-
-            shulker = ctk.CTkLabel(master=frame, text)
-
-            self.frame_data.append([image, name, count, ])
             self.frames.append(frame)
+
+
+class ListItemFrame(ctk.CTkFrame):
+    def __init__(self, master, icon, name, amount, font, state, **kwargs):
+        super().__init__(master, **kwargs)
+
+        self.state = state
+
+        self.grid_columnconfigure(index=0, weight=0)
+        self.grid_columnconfigure(index=1, weight=1, uniform="equal_width")
+        self.grid_columnconfigure(index=2, weight=1, uniform="equal_width")
+        self.grid_columnconfigure(index=3, weight=1, uniform="equal_width")
+
+        print("Loading image:", icon)
+        assert os.path.exists(icon), f"Image file not found: {icon}"
+        self.img = Image.open(icon)
+        self.img = self.img.convert("RGBA")
+        self.icon = ctk.CTkImage(light_image=self.img, dark_image=self.img, size=(32, 32))
+        self.img_border = ctk.CTkFrame(master=self, fg_color="transparent")
+        self.image = ctk.CTkLabel(master=self.img_border, image=self.icon, text="", width=200).pack()
+        self.img_border.grid(row=0, column=0, sticky='ns')
+
+        self.name = ctk.CTkLabel(master=self, text=name, font=font, anchor="w")
+        self.name.grid(row=0, column=1, sticky="nsw")
+
+        match parse.is_unstackable(name.replace(" ", "_").lower()):
+            case 0:
+                num = str(math.floor(amount / 64)) + " + " + str(amount % 64)
+                shulker = str(round(amount / 1728, 1))
+            case 1:
+                num = str(amount)
+                shulker = str(round(amount / 27, 1))
+            case 2:
+                num = str(math.floor(amount / 16)) + " + " + str(amount % 16)
+                shulker = str(round(amount / 432, 1))
+
+        if float(shulker) < 1:
+            shulker = '0'
+
+        self.count = ctk.CTkLabel(master=self, text=num, font=font)
+        self.count.grid(row=0, column=2, sticky='nsew')
+
+        self.shulker = ctk.CTkLabel(master=self, text=shulker, font=font)
+        self.shulker.grid(row=0, column=3, sticky='nsew')
+
+
+    def change_state(self):
+        self.state = not self.state
+        print(self.state)
+
 
 
 
