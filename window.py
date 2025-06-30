@@ -8,6 +8,7 @@ import os
 import json
 import parse
 
+font_file = ''
 
 def load_saved_builds():
     saved_name = []
@@ -25,6 +26,9 @@ class InputWindow(tk.Tk):
         self.filepath = ""
         self.filename = ""
         self.data = {}
+
+        global font_file
+        font_file = Font(file="fonts/minecraft_font.ttf", family="Minecraft")
 
         self.title("Structure Block Counter")
         self.geometry("250x150")
@@ -131,7 +135,6 @@ class DataFrame(ctk.CTkScrollableFrame):
         self.icons = []
         self.image = None
         self.icon = None
-        self.font_file = Font(file="fonts/minecraft_font.ttf", family="Minecraft")
         self.font = ctk.CTkFont('Minecraft')
         self.bold_font = ctk.CTkFont('Minecraft', 14, "bold")
 
@@ -151,7 +154,7 @@ class DataFrame(ctk.CTkScrollableFrame):
         icon_title = ctk.CTkLabel(master=title_frame, text="", width=200)
         name_title = ctk.CTkLabel(master=title_frame, text="Name", font=self.bold_font)
         amount_title = ctk.CTkLabel(master=title_frame, text="Stacks", font=self.bold_font)
-        shulker_img = Image.open('icons/WIP/shulker_box.png')
+        shulker_img = Image.open('icons/replacing/shulker_box.png')
         shulker_icon = ctk.CTkImage(light_image=shulker_img, dark_image=shulker_img, size=(32, 32))
         shulker_image = ctk.CTkLabel(master=title_frame, image=shulker_icon, text="")
 
