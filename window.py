@@ -213,6 +213,9 @@ class ListItemFrame(ctk.CTkFrame):
             case 2:
                 num = str(math.floor(amount / 16)) + " + " + str(amount % 16)
                 shulker = str(round(amount / 432, 1))
+            case _:
+                num = str(math.floor(amount / 64)) + " + " + str(amount % 64)
+                shulker = str(round(amount / 1728, 1))
 
         if float(shulker) < 1:
             shulker = '0'
