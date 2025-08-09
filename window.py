@@ -188,13 +188,17 @@ class ListItemFrame(ctk.CTkFrame):
         self.grid_columnconfigure(index=3, weight=1, uniform="equal_width")
 
         print("Loading image:", icon)
-        assert os.path.exists(icon), f"Image file not found: {icon}"
-        self.img = Image.open(icon)
-        self.img = self.img.convert("RGBA")
-        self.icon = ctk.CTkImage(light_image=self.img, dark_image=self.img, size=(32, 32))
-        self.img_border = ctk.CTkFrame(master=self, fg_color="transparent")
-        self.image = ctk.CTkLabel(master=self.img_border, image=self.icon, text="", width=200).pack()
-        self.img_border.grid(row=0, column=0, sticky='ns')
+        try:
+            assert os.path.exists(icon), f"Image file not found: {icon}"
+            self.img = Image.open(icon)
+            self.img = self.img.convert("RGBA")
+            self.icon = ctk.CTkImage(light_image=self.img, dark_image=self.img, size=(32, 32))
+            self.img_border = ctk.CTkFrame(master=self, fg_color="transparent")
+            self.image = ctk.CTkLabel(master=self.img_border, image=self.icon, text="", width=200).pack()
+            self.img_border.grid(row=0, column=0, sticky='ns')
+        except AssertionError:
+            pass
+
 
         self.name = ctk.CTkLabel(master=self, text=name, font=font, anchor="w")
         self.name.grid(row=0, column=1, sticky="nsw")
