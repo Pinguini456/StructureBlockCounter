@@ -2,7 +2,7 @@
 
 <img src="https://img.shields.io/badge/Minecraft-Bedrock%20Edition-62B47A?style=for-the-badge&logo=minecraft&logoColor=white" alt="Minecraft Bedrock Edition"/>
 <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python 3.10+"/>
-<img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT License"/>
+<img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=for-the-badge" alt="CC BY-NC 4.0"/>
 
 # Structure Block Counter (WIP)
 
@@ -189,6 +189,22 @@ structure: {
 - Only supports **Bedrock Edition** `.mcstructure` files (Java Edition uses a different format)
 - Entities (mobs, item frames with items) are partially supported
 - Some legacy block IDs may not be recognized
+
+---
+
+## License
+
+This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**.
+
+**You are free to:**
+- **Share** — copy and redistribute the material in any medium or format
+- **Adapt** — remix, transform, and build upon the material
+
+**Under the following terms:**
+- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made
+- **NonCommercial** — You may not use the material for commercial purposes
+
+[View full license](https://creativecommons.org/licenses/by-nc/4.0/)
 
 ---
 
