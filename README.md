@@ -8,9 +8,6 @@
 
 ### A powerful material list generator for Minecraft Bedrock Edition structures
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/user-attachments/assets/banner-placeholder.png" alt="Structure Block Counter Banner" width="800"/>
-</p>
 
 </div>
 
@@ -156,20 +153,6 @@ Contributions are welcome! Here's how you can help:
 - Check if the issue already exists
 - Include the structure file that causes the problem
 - Provide your Python version and operating system
-
-### Adding Features
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-### Code Style
-
-- Follow PEP 8 guidelines
-- Add docstrings for new functions
-- Keep functions focused and modular
 
 ---
 
