@@ -218,7 +218,7 @@ This project is licensed under the **Creative Commons Attribution-NonCommercial 
 
 <div align="center">
 
-Made with by a Minecraft builder, for Minecraft builders
+Made by a Minecraft builder, for Minecraft builders
 
 ⭐ Star this repo if you find it useful! ⭐
 
